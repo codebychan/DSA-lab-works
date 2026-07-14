@@ -1,4 +1,4 @@
-//addition of two matrix
+//addition of two sparse matrix
 #include <stdio.h>
 
 struct sparse
