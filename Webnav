@@ -1,0 +1,150 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Define the Node structure
+typedef struct Node {
+    char url[100];
+    struct Node *prev;
+    struct Node *next;
+} Node;
+
+// Global pointer to track the current page
+Node *current = NULL;
+
+// Function to visit a new page
+void visitPage(char *url) {
+    Node *newNode = (Node *)malloc(sizeof(Node));
+
+    if (newNode == NULL) {
+        printf("Memory allocation failed.\n");
+        return;
+    }
+
+    strcpy(newNode->url, url);
+    newNode->prev = current;
+    newNode->next = NULL;
+
+    // Discard forward history
+    if (current != NULL) {
+        Node *temp = current->next;
+
+        while (temp != NULL) {
+            Node *toDelete = temp;
+            temp = temp->next;
+            free(toDelete);
+        }
+
+        current->next = newNode;
+    }
+
+    current = newNode;
+
+    printf("Visited: %s\n", current->url);
+}
+
+// Function to go back to the previous page
+void goBack() {
+    if (current != NULL && current->prev != NULL) {
+        current = current->prev;
+        printf("Went back to: %s\n", current->url);
+    } else {
+        printf("No previous page.\n");
+    }
+}
+
+// Function to go forward to the next page
+void goForward() {
+    if (current != NULL && current->next != NULL) {
+        current = current->next;
+        printf("Went forward to: %s\n", current->url);
+    } else {
+        printf("No next page.\n");
+    }
+}
+
+// Function to display the current page
+void displayCurrentPage() {
+    if (current != NULL) {
+        printf("Current page: %s\n", current->url);
+    } else {
+        printf("No page loaded.\n");
+    }
+}
+
+// Function to clear all history
+void clearHistory() {
+    // Move to the first page
+    while (current != NULL && current->prev != NULL) {
+        current = current->prev;
+    }
+
+    // Delete all nodes
+    while (current != NULL) {
+        Node *toDelete = current;
+        current = current->next;
+        free(toDelete);
+    }
+
+    current = NULL;
+
+    printf("History cleared.\n");
+}
+
+// Main function
+int main() {
+    int choice;
+    char url[100];
+
+    while (1) {
+        printf("\n--- Browser Navigation ---\n");
+        printf("1. Visit Page\n");
+        printf("2. Go Back\n");
+        printf("3. Go Forward\n");
+        printf("4. Display Current Page\n");
+        printf("5. Clear History\n");
+        printf("6. Exit\n");
+        printf("Enter your choice: ");
+
+        scanf("%d", &choice);
+        getchar();  // Consume newline
+
+        switch (choice) {
+            case 1:
+                printf("Enter URL: ");
+                fgets(url, sizeof(url), stdin);
+
+                // Remove newline
+                url[strcspn(url, "\n")] = '\0';
+
+                visitPage(url);
+                break;
+
+            case 2:
+                goBack();
+                break;
+
+            case 3:
+                goForward();
+                break;
+
+            case 4:
+                displayCurrentPage();
+                break;
+
+            case 5:
+                clearHistory();
+                break;
+
+            case 6:
+                clearHistory();
+                printf("Exiting program.\n");
+                return 0;
+
+            default:
+                printf("Invalid choice.\n");
+        }
+    }
+
+    return 0;
+}
