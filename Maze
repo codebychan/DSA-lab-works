@@ -1,0 +1,13 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define MAX 100
+#define INF 9999
+// Directions: up, down, left, right
+int dirRow[] = {-1, 1, 0, 0};
+int dirCol[] = {0, 0, -1, 1};
+struct Node {
+int x, y;
+};
+struct Node queue[MAX*MAX];
+int front = 0, rear = -1;
+// Enqueue
