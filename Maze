@@ -51,3 +51,32 @@ dist[i][j] = 0;
 }
  
 // Multi-source BFS
+while (front <= rear) {
+struct Node temp = dequeue();
+int x = temp.x;
+int y = temp.y;
+ 
+for (int k=0; k<4; k++) {
+int newX = x + dirRow[k];
+int newY = y + dirCol[k];
+ 
+if (isValid(newX, newY, n, m) && maze[newX][newY] == 0 && 
+dist[newX][newY] > dist[x][y] + 1) {
+dist[newX][newY] = dist[x][y] + 1;
+enqueue(newX, newY);
+}
+}
+}
+ 
+printf("Shortest distance from land mines:\n");
+for (int i=0; i<n; i++) {
+for (int j=0; j<m; j++) {
+if (maze[i][j] == 999) printf(" # ");
+else if (dist[i][j] == INF) printf(" INF ");
+else printf("%3d ", dist[i][j]);
+}
+printf("\n");
+}
+ 
+return 0;
+}
