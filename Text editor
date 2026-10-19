@@ -1,1 +1,34 @@
 
+#include <stdio.h>
+#include <string.h>
+void findAndReplace(char text[], char find[], char replace[], char result[]) {
+ int i = 0, j = 0, k;
+ int findLen = strlen(find);
+ int replaceLen = strlen(replace);
+ while (text[i] != '\0') {
+ // Check if current part matches 'find' word
+ if (strncmp(&text[i], find, findLen) == 0) {
+ // Copy the 'replace' word into result
+ for (k = 0; k < replaceLen; k++) {
+ result[j++] = replace[k];
+ }
+ i += findLen; // Skip past the found word in original text
+ } else {
+ result[j++] = text[i++]; // Copy character as is
+ }
+ }
+ result[j] = '\0'; // Null-terminate the result string
+}
+int main() {
+ char text[500], find[50], replace[50], result[1000];
+ printf("Enter the text:\n");
+ fgets(text, sizeof(text), stdin);
+ text[strcspn(text, "\n")] = '\0'; // Remove newline character
+ printf("Enter the word to find: ");
+ scanf("%s", find);
+ printf("Enter the word to replace it with: ");
+ scanf("%s", replace);
+ findAndReplace(text, find, replace, result);
+ printf("\nUpdated text:\n%s\n", result);
+ return 0;
+}
